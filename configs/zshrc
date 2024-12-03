@@ -44,7 +44,7 @@ bindkey '^[[1;5D' backward-word
 bindkey '^[[H' beginning-of-line
 bindkey '^[[F' end-of-line
 
-alias updateNixConfig="(cd ~/nix-config && nix flake update && darwin-rebuild switch --flake .#myMac)"
+alias updateNixConfig="(cd ~/nix-config && nix flake update && nix run github:LnL7/nix-darwin -- switch --flake ~/nix-config)"
 alias ks="kitten +kitty ssh"
 alias ll="ls -lhA"
 alias ..="cd .."
