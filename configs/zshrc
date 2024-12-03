@@ -1,0 +1,54 @@
+if [[ ":$PATH:" != *":$HOME/.local/bin:"* ]]; then
+  export PATH="$PATH:$HOME/.local/bin"
+fi
+
+ZINIT_DIR="$HOME/.local/share/zinit/zinit.git"
+if [[ ! -f "$ZINIT_DIR/zinit.zsh" ]]; then
+  echo "Installing Zinit..."
+  mkdir -p "$(dirname "$ZINIT_DIR")" && chmod g-rwX "$(dirname "$ZINIT_DIR")"
+  git clone https://github.com/zdharma-continuum/zinit "$ZINIT_DIR" || return 1
+fi
+source "$ZINIT_DIR/zinit.zsh"
+
+zinit light zsh-users/zsh-autosuggestions
+zinit light zsh-users/zsh-syntax-highlighting
+zinit light zsh-users/zsh-completions
+zinit light zsh-users/zsh-history-substring-search
+zinit light junegunn/fzf
+zinit light agkozak/zsh-z
+zinit light rupa/z
+
+eval "$(starship init zsh)"
+
+autoload -Uz compinit && compinit
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
+zstyle ':completion:*' menu select
+zstyle ':completion:*' group-name ''
+zstyle ':completion:*' select-prompt '%SScrolling: %s'
+zstyle ':autocomplete:*' insert-unambiguous no
+
+HISTFILE="$HOME/.zsh_history"
+HISTSIZE=10000
+SAVEHIST=10000
+setopt hist_ignore_dups
+setopt share_history
+setopt inc_append_history
+setopt hist_ignore_all_dups
+
+bindkey '^[[A' history-substring-search-up
+bindkey '^[[B' history-substring-search-down
+autoload -Uz select-word-style
+select-word-style bash
+bindkey '^[[1;5C' forward-word
+bindkey '^[[1;5D' backward-word
+bindkey '^[[H' beginning-of-line
+bindkey '^[[F' end-of-line
+
+alias updateNixConfig="(cd ~/nix-config && nix flake update && darwin-rebuild switch --flake .#myMac)"
+alias ks="kitten +kitty ssh"
+alias ll="ls -lhA"
+alias ..="cd .."
+alias ...="cd ../.."
+alias grep="grep --color=auto"
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

@@ -1,0 +1,14 @@
+- defaults:
+    link:
+      create: true
+      relink: true
+
+- clean: ["~/.config"]
+
+- link:
+    ~/.config/kitty: configs/kitty
+    ~/.config/nix: configs/nix
+    ~/.config/nvim: configs/nvim
+    ~/.config/starship.toml: configs/starship.toml
+    ~/.zshrc: configs/zshrc
+    ~/.hushlogin: configs/hushlogin

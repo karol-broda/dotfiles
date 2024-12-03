@@ -1,0 +1,69 @@
+"$schema" = 'https://starship.rs/config-schema.json'
+add_newline = true
+
+[character]
+success_symbol = "[➜](bold green)"
+error_symbol = "[✗](bold red)"
+vimcmd_symbol = "[V](bold yellow)"
+
+[directory]
+truncation_length = 3
+truncation_symbol = "…/"
+style = "cyan bold"
+read_only = "🔒"
+read_only_style = "red"
+
+[git_branch]
+symbol = " "
+truncation_length = 20
+truncation_symbol = "…"
+style = "bold purple"
+
+[git_status]
+stashed = "📦 "
+modified = "✍️ "
+staged = "✔️ "
+deleted = "🗑️ "
+style = "bold green"
+
+[nodejs]
+format = "via [⬢ $version](bold green)"
+detect_extensions = ["js", "ts"]
+detect_files = ["package.json", "node_modules"]
+
+[python]
+symbol = "🐍 "
+style = "bold yellow"
+format = "via [$symbol$version]($style)"
+detect_files = ["requirements.txt", "pyproject.toml", "Pipfile", ".venv"]
+pyenv_version_name = false
+
+[cmd_duration]
+min_time = 2000
+format = "took [$duration](bold yellow)"
+
+[aws]
+format = "on [☁️ $profile](bold blue)"
+style = "blue bold"
+symbol = "☁️ "
+
+[docker_context]
+format = "via [🐳 $context](bold cyan)"
+only_with_files = true
+style = "cyan bold"
+
+[battery]
+full_symbol = "🔋"
+charging_symbol = "⚡"
+discharging_symbol = "🔌"
+format = "[$symbol$percentage](bold green)"
+[[battery.display]]
+threshold = 30
+style = "bold yellow"
+[[battery.display]]
+threshold = 10
+style = "bold red"
+
+[fill]
+symbol = "-"
+style = "bold green"
