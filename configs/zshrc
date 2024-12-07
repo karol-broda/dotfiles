@@ -41,14 +41,42 @@ autoload -Uz select-word-style
 select-word-style bash
 bindkey '^[[1;5C' forward-word
 bindkey '^[[1;5D' backward-word
+bindkey '^[[1;9C' forward-word
+bindkey '^[[1;9D' backward-word
 bindkey '^[[H' beginning-of-line
 bindkey '^[[F' end-of-line
 
 alias updateNixConfig="(cd ~/nix-config && nix flake update && nix run github:LnL7/nix-darwin -- switch --flake ~/nix-config)"
-alias ks="kitten +kitty ssh"
+alias ks="kitten ssh"
 alias ll="ls -lhA"
 alias ..="cd .."
 alias ...="cd ../.."
 alias grep="grep --color=auto"
+alias docker-clean='docker container stop $(docker ps -aq) && docker container rm $(docker ps -aq) && docker volume rm $(docker volume ls -q) && docker network rm $(docker network ls -q 2>/dev/null | grep -v "bridge\|host\|none") && docker image rm -f $(docker images -q) && docker system prune -af --volumes'
+
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# fnm start
+export PATH="/Users/karolbroda/.local/state/fnm_multishells/41526_1733271258187/bin":$PATH
+export FNM_MULTISHELL_PATH="/Users/karolbroda/.local/state/fnm_multishells/41526_1733271258187"
+export FNM_VERSION_FILE_STRATEGY="local"
+export FNM_DIR="/Users/karolbroda/.local/share/fnm"
+export FNM_LOGLEVEL="info"
+export FNM_NODE_DIST_MIRROR="https://nodejs.org/dist"
+export FNM_COREPACK_ENABLED="false"
+export FNM_RESOLVE_ENGINES="true"
+export FNM_ARCH="arm64"
+autoload -U add-zsh-hook
+_fnm_autoload_hook () {
+    if [[ -f .node-version || -f .nvmrc || -f package.json ]]; then
+    fnm use --silent-if-unchanged
+fi
+
+}
+
+add-zsh-hook chpwd _fnm_autoload_hook \
+    && _fnm_autoload_hook
+
+rehash
+#fnm end
