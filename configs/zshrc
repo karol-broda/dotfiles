@@ -47,6 +47,7 @@ bindkey '^[[H' beginning-of-line
 bindkey '^[[F' end-of-line
 
 alias updateNixConfig="(cd ~/nix-config && nix flake update && nix run github:LnL7/nix-darwin -- switch --flake ~/nix-config)"
+alias switchFlake='nix run github:LnL7/nix-darwin -- switch --flake ~/nix-config'
 alias ks="kitten ssh"
 alias ll="ls -lhA"
 alias ..="cd .."
@@ -54,6 +55,21 @@ alias ...="cd ../.."
 alias grep="grep --color=auto"
 alias docker-clean='docker container stop $(docker ps -aq) && docker container rm $(docker ps -aq) && docker volume rm $(docker volume ls -q) && docker network rm $(docker network ls -q 2>/dev/null | grep -v "bridge\|host\|none") && docker image rm -f $(docker images -q) && docker system prune -af --volumes'
 
+
+updateFlake() {
+    local nix_config_dir=~/nix-config
+    cd "$nix_config_dir" || return 1
+
+    nix flake update
+
+    if git diff --quiet flake.lock; then
+        echo "no changes detected in flake.lock"
+    else
+        git add flake.lock
+        git commit -m "update flake.lock ($(date '+%Y-%m-%d'))"
+        echo "flake.lock updated and committed"
+    fi
+}
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
