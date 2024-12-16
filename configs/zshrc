@@ -5,7 +5,7 @@ fi
 ZINIT_DIR="$HOME/.local/share/zinit/zinit.git"
 if [[ ! -f "$ZINIT_DIR/zinit.zsh" ]]; then
   echo "Installing Zinit..."
-  mkdir -p "$(dirname "$ZINIT_DIR")" && chmod g-rwX "$(dirname "$ZINIT_DIR")"
+  mkdir -p "$(dirname "$ZINIT_DIR")" && chmod 700 "$(dirname "$ZINIT_DIR")"
   git clone https://github.com/zdharma-continuum/zinit "$ZINIT_DIR" || return 1
 fi
 source "$ZINIT_DIR/zinit.zsh"
@@ -18,9 +18,13 @@ zinit light junegunn/fzf
 zinit light agkozak/zsh-z
 zinit light rupa/z
 
-eval "$(starship init zsh)"
+if command -v starship &>/dev/null; then
+  eval "$(starship init zsh)"
+else
+  echo "starship prompt is not installed."
+fi
 
-autoload -Uz compinit && compinit
+autoload -Uz compinit && compinit -C
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 zstyle ':completion:*' menu select
 zstyle ':completion:*' group-name ''
@@ -41,64 +45,61 @@ autoload -Uz select-word-style
 select-word-style bash
 bindkey '^[[1;5C' forward-word
 bindkey '^[[1;5D' backward-word
-bindkey '^[[1;9C' forward-word
-bindkey '^[[1;9D' backward-word
 bindkey '^[[H' beginning-of-line
 bindkey '^[[F' end-of-line
 
-alias updateNixConfig="(cd ~/nix-config && nix flake update && nix run github:LnL7/nix-darwin -- switch --flake ~/nix-config)"
+updateFlake() {
+  local nix_config_dir="$HOME/nix-config"
+  echo "navigating to $nix_config_dir"
+  cd "$nix_config_dir" || return 1
+
+  echo "updating Nix flake..."
+  nix flake update
+
+  if git diff --quiet flake.lock; then
+    echo "no changes detected in flake.lock"
+  else
+    git add flake.lock
+    git commit -m "update flake.lock ($(date '+%Y-%m-%d'))"
+    echo "flake.lock updated and committed"
+  fi
+}
+
+alias updateNixConfig="(cd ~/nix-config && updateFlake && nix run github:LnL7/nix-darwin -- switch --flake ~/nix-config)"
 alias switchFlake='nix run github:LnL7/nix-darwin -- switch --flake ~/nix-config'
 alias ks="kitten ssh"
 alias ll="ls -lhA"
 alias ..="cd .."
 alias ...="cd ../.."
 alias grep="grep --color=auto"
-alias docker-clean='docker container stop $(docker ps -aq) && docker container rm $(docker ps -aq) && docker volume rm $(docker volume ls -q) && docker network rm $(docker network ls -q 2>/dev/null | grep -v "bridge\|host\|none") && docker image rm -f $(docker images -q) && docker system prune -af --volumes'
-
-
-updateFlake() {
-    local nix_config_dir=~/nix-config
-    cd "$nix_config_dir" || return 1
-
-    nix flake update
-
-    if git diff --quiet flake.lock; then
-        echo "no changes detected in flake.lock"
-    else
-        git add flake.lock
-        git commit -m "update flake.lock ($(date '+%Y-%m-%d'))"
-        echo "flake.lock updated and committed"
-    fi
-}
+alias docker-clean='docker container stop $(docker ps -aq) 2>/dev/null && \
+docker container rm $(docker ps -aq) 2>/dev/null && \
+docker volume rm $(docker volume ls -q) 2>/dev/null && \
+docker network rm $(docker network ls -q 2>/dev/null | grep -v "bridge\|host\|none") 2>/dev/null && \
+docker image rm -f $(docker images -q) 2>/dev/null && \
+docker system prune -af --volumes'
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-# fnm start
-export PATH="/Users/karolbroda/.local/state/fnm_multishells/41526_1733271258187/bin":$PATH
-export FNM_MULTISHELL_PATH="/Users/karolbroda/.local/state/fnm_multishells/41526_1733271258187"
+# start fnm 
+export PATH="$HOME/.local/state/fnm_multishells/41526_1733271258187/bin:$PATH"
+export FNM_MULTISHELL_PATH="$HOME/.local/state/fnm_multishells/41526_1733271258187"
 export FNM_VERSION_FILE_STRATEGY="local"
-export FNM_DIR="/Users/karolbroda/.local/share/fnm"
+export FNM_DIR="$HOME/.local/share/fnm"
 export FNM_LOGLEVEL="info"
-export FNM_NODE_DIST_MIRROR="https://nodejs.org/dist"
+export FNM_NODE_DIST_MIRROR="${FNM_NODE_DIST_MIRROR:-https://nodejs.org/dist}"
 export FNM_COREPACK_ENABLED="false"
 export FNM_RESOLVE_ENGINES="true"
 export FNM_ARCH="arm64"
 autoload -U add-zsh-hook
 _fnm_autoload_hook () {
-    if [[ -f .node-version || -f .nvmrc || -f package.json ]]; then
+  if [[ -f .node-version || -f .nvmrc || -f package.json ]]; then
     fnm use --silent-if-unchanged
-fi
-
+  fi
 }
+add-zsh-hook chpwd _fnm_autoload_hook && _fnm_autoload_hook
+# end fnm
 
-add-zsh-hook chpwd _fnm_autoload_hook \
-    && _fnm_autoload_hook
-
-rehash
-#fnm end
-
-# op start
-
-export SSH_AUTH_SOCK=~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock
-
-# op end
+# start op
+export SSH_AUTH_SOCK="$HOME/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
+# end op

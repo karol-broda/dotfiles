@@ -9,27 +9,28 @@ vimcmd_symbol = "[V](bold yellow)"
 [directory]
 truncation_length = 3
 truncation_symbol = "…/"
-style = "cyan bold"
+style = "bold cyan"
 read_only = "🔒"
-read_only_style = "red"
+read_only_style = "bold red"
 
 [git_branch]
 symbol = " "
 truncation_length = 20
 truncation_symbol = "…"
-style = "bold purple"
+style = "bold magenta"
 
 [git_status]
-stashed = "📦 "
-modified = "✍️ "
-staged = "✔️ "
-deleted = "🗑️ "
-style = "bold green"
+stashed = "[📦](bold yellow) "
+modified = "[✍️](bold orange) "
+staged = "[✔️](bold green) "
+deleted = "[🗑️](bold red) "
+style = "bold white"
 
 [nodejs]
 format = "via [⬢ $version](bold green)"
-detect_extensions = ["js", "ts"]
+detect_extensions = ["js", "ts", "jsx", "tsx"]
 detect_files = ["package.json", "node_modules"]
+style = "bold green"
 
 [python]
 symbol = "🐍 "
@@ -41,29 +42,45 @@ pyenv_version_name = false
 [cmd_duration]
 min_time = 2000
 format = "took [$duration](bold yellow)"
+style = "bold yellow"
 
 [aws]
 format = "on [☁️ $profile](bold blue)"
-style = "blue bold"
+style = "bold blue"
 symbol = "☁️ "
 
 [docker_context]
 format = "via [🐳 $context](bold cyan)"
 only_with_files = true
-style = "cyan bold"
+style = "bold cyan"
 
-[battery]
-full_symbol = "🔋"
-charging_symbol = "⚡"
-discharging_symbol = "🔌"
-format = "[$symbol$percentage](bold green)"
-[[battery.display]]
-threshold = 30
-style = "bold yellow"
-[[battery.display]]
-threshold = 10
-style = "bold red"
+[time]
+format = "[🕒 $time](bold blue)"
+time_format = "%H:%M:%S"
+style = "bold blue"
+
+[shell]
+format = "[ $name](bold cyan)"
+style = "bold cyan"
+
+[hostname]
+format = "on [ $hostname](bold green)"
+style = "bold green"
+trim_at = "."
 
 [fill]
 symbol = "-"
 style = "bold green"
+
+prompt_order = [
+    "time",
+    "line_break",
+    "directory",
+    "git_branch",
+    "git_status",
+    "nodejs",
+    "python",
+    "aws",
+    "docker_context",
+    "character"
+]
