@@ -9,6 +9,11 @@
     ~/.config/kitty: configs/kitty
     ~/.config/nix: configs/nix
     ~/.config/nvim: configs/nvim
-    ~/.config/starship.toml: configs/starship.toml
+    ~/.config/starship.toml: configs/starship/config.toml
     ~/.zshrc: configs/zshrc
     ~/.hushlogin: configs/hushlogin
+    ~/.zfunc/_rustup: completions/rustup
+    ~/.zfunc/_cargo: completions/cargo
+    ~/.zfunc/_kubectl: completions/kubectl
+    ~/.config/starship/zsh_conf: configs/starship/zsh_conf
+    ~/.wezterm.lua: configs/wezterm.lua

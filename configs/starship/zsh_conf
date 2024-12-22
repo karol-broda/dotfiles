@@ -1,0 +1,5 @@
+starship_transient_prompt_func() {
+  PROMPT=$(starship module character)
+}
+precmd_functions+=(starship_transient_prompt_func)
+

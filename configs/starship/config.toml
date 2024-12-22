@@ -20,7 +20,6 @@ truncation_symbol = "…"
 style = "bold magenta"
 
 [git_status]
-stashed = "[📦](bold yellow) "
 modified = "[✍️](bold orange) "
 staged = "[✔️](bold green) "
 deleted = "[🗑️](bold red) "
@@ -41,7 +40,7 @@ pyenv_version_name = false
 
 [cmd_duration]
 min_time = 2000
-format = "took [$duration](bold yellow)"
+format = " took [$duration](bold yellow)"
 style = "bold yellow"
 
 [aws]
