@@ -81,7 +81,31 @@ docker network rm $(docker network ls -q 2>/dev/null | grep -v "bridge\|host\|no
 docker image rm -f $(docker images -q) 2>/dev/null && \
 docker system prune -af --volumes'
 
+export FZF_DEFAULT_OPTS=" \
+--color=bg+:#363a4f,bg:#24273a,spinner:#f4dbd6,hl:#ed8796 \
+--color=fg:#cad3f5,header:#ed8796,info:#c6a0f6,pointer:#f4dbd6 \
+--color=marker:#b7bdf8,fg+:#cad3f5,prompt:#c6a0f6,hl+:#ed8796 \
+--color=selected-bg:#494d64 \
+--multi \
+--preview 'bat --style=numbers --color=always --line-range :500 {}' \
+--preview-window=right:60%:wrap"
+
+export FZF_DEFAULT_COMMAND='rg --files --hidden --glob "!.git/*"'
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+ff() {
+  fzf --preview 'bat --style=numbers --color=always --line-range :500 {}' \
+      --preview-window=right:60%:wrap
+}
+
+fg() {
+  rg --line-number --hidden --glob "!.git/*" "$1" | \
+    fzf --delimiter : \
+        --preview 'bat --style=numbers --color=always --line-range :500 {1}' \
+        --preview-window=right:60%:wrap
+}
 
 # start fnm 
 export PATH="$HOME/.local/state/fnm_multishells/41526_1733271258187/bin:$PATH"
@@ -100,8 +124,15 @@ _fnm_autoload_hook () {
   fi
 }
 add-zsh-hook chpwd _fnm_autoload_hook && _fnm_autoload_hook
+
+eval "$(fnm env --use-on-cd --shell zsh)"
 # end fnm
 
 # start op
 export SSH_AUTH_SOCK="$HOME/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
-# end op
+# end op 
+
+# start wezterm
+source ~/.config/wezterm/shell.sh
+# end wezterm
+

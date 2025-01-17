@@ -16,4 +16,7 @@
     ~/.zfunc/_cargo: completions/cargo
     ~/.zfunc/_kubectl: completions/kubectl
     ~/.config/starship/zsh_conf: configs/starship/zsh_conf
-    ~/.wezterm.lua: configs/wezterm.lua
+    ~/.config/wezterm: configs/wezterm/
+    ~/.config/nixpkgs/config.nix: configs/nixpkgs.config.nix
+    ~/.config/aerospace/move_pip_windows.sh: configs/aerospace/pip.sh
+    ~/.aerospace.toml: configs/aerospace/config.toml
